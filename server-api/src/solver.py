@@ -21,4 +21,4 @@ def solve(text: str) -> str:
     return process_solution(str(solution))
 
 if __name__ == "__main__":
-    print(solve("(23*x)*3+4*2<=365"))
+    print(solve("2*x<3"))
