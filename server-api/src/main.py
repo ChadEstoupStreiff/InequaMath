@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, UploadFile
 import pytesseract
 from PIL import Image
+from solver import solve
 
 
 app = FastAPI()
@@ -55,6 +56,6 @@ def compacted_process(text: str) -> str:
 def solve_inequation(inequation: str) -> Dict[str, str]:
     return {
         "base": inequation,
-        "result": None,
+        "result": solve(inequation),
         "steps": None,
     }
