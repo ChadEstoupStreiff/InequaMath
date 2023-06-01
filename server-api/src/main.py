@@ -4,6 +4,7 @@ from fastapi import FastAPI, UploadFile
 import pytesseract
 from PIL import Image
 from solver import solve as solver_solve
+import logging
 
 
 app = FastAPI()
@@ -33,16 +34,22 @@ async def ocr(image: UploadFile, one_line: bool = True, compacted: bool = False)
     return ocr_prediction(img, one_line=one_line, compacted=compacted)
 
 def ocr_prediction(img: Image, one_line: bool = False, compacted: bool = False) -> Dict[str, str]:
-    text = pytesseract.image_to_string(img)
-    if one_line:
-        text = one_line_process(text)
-    if compacted:
-        text = compacted_process(text)
-    return {
-        "text": text,
-        # Info bug if dpi not perfect
-        # "info": pytesseract.image_to_osd(img),
-    }
+    try:
+        text = pytesseract.image_to_string(img)
+        if one_line:
+            text = one_line_process(text)
+        if compacted:
+            text = compacted_process(text)
+        logging.info("Readed:")
+        logging.info(text)
+        return {
+            "text": text,
+            # Info bug if dpi not perfect
+            # "info": pytesseract.image_to_osd(img),
+        }
+    except:
+        logging.error("Error trying to predict !")
+        raise ValueError
 
 def one_line_process(text: str) -> str:
     text = text.replace("\n", " ").replace("\f", "")
@@ -54,9 +61,16 @@ def compacted_process(text: str) -> str:
     return text.replace(" ", "")
 
 def solve_inequation(inequation: str) -> Dict[str, str]:
-    print(solver_solve(inequation))
-    return {
-        "base": inequation,
-        "result": solver_solve(inequation).__str__(),
-        "steps": None,
-    }
+    try:
+        result: str = solver_solve(inequation)
+        logging.info("Solved:")
+        logging.info(inequation)
+        logging.info(result)
+        return {
+            "base": inequation,
+            "result": result.__str__(),
+            "steps": None,
+        }
+    except:
+        logging.error(f"Error trying to solve {inequation} !")
+        raise SyntaxError

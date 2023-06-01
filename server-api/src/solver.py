@@ -1,24 +1,34 @@
-from sympy.abc import x, y
 from sympy import reduce_inequalities
+from sympy.abc import x
+
+
+def is_digit(text: str) -> bool:
+    try:
+        float(text)
+        return True
+    except ValueError:
+        return False
 
 def process_text(text: str) -> str:
-    
+    if len(text) > 0:
+        i: int = 1
+        if (text[i] == "(" or text[i] == "x") and is_digit(text[i-1]):
+            text = f"{text[:i]}*{text[i:]}"
     return text
 
-def process_solution(solution) -> str:
-    solution = solution.split("&")
+
+def process_solution(solution: str) -> str:
+    solution: str = solution.split("&")
     if "oo" in solution[0]:
-        solution = solution[1]
+        solution : str = solution[1]
     else:
-        solution = solution[0]
+        solution : str = solution[0]
     return solution.replace(" ", "")[1:-1]
 
-def solve(text: str) -> str:
-    text = process_text(text)
-    if "y" in text:
-        solution = reduce_inequalities(text, [x])
-    solution = reduce_inequalities(text, [])
-    return process_solution(str(solution))
 
-if __name__ == "__main__":
-    print(solve("2*x<3"))
+def solve(text: str) -> str:
+    text: str = process_text(text)
+    if "y" in text:
+        solution : str = reduce_inequalities(text, [x])
+    solution : str = reduce_inequalities(text, [])
+    return process_solution(str(solution))
