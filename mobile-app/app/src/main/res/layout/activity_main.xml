@@ -8,10 +8,16 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btn_take_photo"
+        android:id="@+id/capture_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Prendre une photo" />
+
+    <ImageView
+        android:id="@+id/captured_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
