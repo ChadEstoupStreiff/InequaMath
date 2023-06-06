@@ -53,8 +53,11 @@ if __name__ == "__main__":
                 #     result = None
 
         if result is not None:
-            right.write(f"Detected inequation: {result['base']}")
-            right.subheader(f"Result: {result['result']}")
+            if type(result) is str:
+                right.error(f"Error: {result}")
+            else:
+                right.write(f"Detected inequation: {result['base']}")
+                right.subheader(f"Result: {result['result']}")
         else:
             right.error("Error solving inequation !")
     else:

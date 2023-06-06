@@ -2,5 +2,5 @@ Pillow==9.5.*
 pytesseract==0.3.*
 fastapi==0.95.*
 uvicorn[standard]==0.22.*
-python-multipart
-sympy
+python-multipart==0.0.*
+sympy==1.12

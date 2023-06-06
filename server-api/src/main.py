@@ -22,7 +22,10 @@ app.add_middleware(
 @app.post("/full", tags=["OCR", "Solving"])
 async def full(image: UploadFile):
     img = Image.open(image.file)
-    return solve_inequation(ocr_prediction(img, one_line=True, compacted=True)["text"])
+    prediction = ocr_prediction(img, one_line=True, compacted=True)
+    if type(prediction) is str:
+        return prediction
+    return solve_inequation(prediction["text"])
 
 @app.post("/solve", tags=["Solving"])
 async def solve(inequation: str):
@@ -40,16 +43,19 @@ def ocr_prediction(img: Image, one_line: bool = False, compacted: bool = False) 
             text = one_line_process(text)
         if compacted:
             text = compacted_process(text)
-        logging.info("Readed:")
-        logging.info(text)
-        return {
-            "text": text,
-            # Info bug if dpi not perfect
-            # "info": pytesseract.image_to_osd(img),
-        }
+        if len(text) > 0:
+            logging.info("Readed:")
+            logging.info(text)
+            return {
+                "text": text,
+                # Info bug if dpi not perfect
+                # "info": pytesseract.image_to_osd(img),
+            }
+        else:
+            return "No text detected !"
     except:
-        logging.error("Error trying to predict !")
-        raise ValueError
+        logging.error("Error trying to predict text !")
+        return "Error trying to predict !"
 
 def one_line_process(text: str) -> str:
     text = text.replace("\n", " ").replace("\f", "")
@@ -73,4 +79,4 @@ def solve_inequation(inequation: str) -> Dict[str, str]:
         }
     except:
         logging.error(f"Error trying to solve {inequation} !")
-        raise SyntaxError
+        return f"Error trying to solve {inequation} !"
