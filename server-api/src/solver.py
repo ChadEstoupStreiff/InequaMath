@@ -12,8 +12,10 @@ def is_digit(text: str) -> bool:
 def process_text(text: str) -> str:
     if len(text) > 0:
         i: int = 1
-        if (text[i] == "(" or text[i] == "x") and is_digit(text[i-1]):
-            text = f"{text[:i]}*{text[i:]}"
+        while i < len(text):
+            if (text[i] == "(" or text[i] == "x") and (is_digit(text[i-1]) or text[i-1] == ")"):
+                text = f"{text[:i]}*{text[i:]}"
+            i += 1
     return text
 
 
